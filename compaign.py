@@ -24,13 +24,13 @@ def extract_json(text):
         raise ValueError("JSON not found")
     return json.loads(text[start:end+1])
 
-# Load all campaigns
+
 def load_all_weeks():
     if os.path.exists("all_weeks.json"):
         return json.load(open("all_weeks.json"))
     return {"campaigns": []}
 
-# Append into all_weeks.json
+
 def save_to_all_weeks(data):
     db = load_all_weeks()
     week_number = len(db["campaigns"]) + 1
@@ -81,10 +81,10 @@ raw = generate(PROMPT)
 try:
     data = extract_json(raw)
 
-    # Save into all_weeks.json (append)
+
     week_num = save_to_all_weeks(data)
 
-    # Save latest output to current_week.json (overwrite)
+
     current_week_data = {
         "week": week_num,
         "topic": data["topic"],
