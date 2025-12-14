@@ -6,27 +6,26 @@ from io import BytesIO
 import requests
 from PIL import Image
 
-# --- Changes for GEMINI API and .env loading ---
+
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types 
 
-# Load environment variables from the .env file
 load_dotenv() 
 
-# Use GEMINI_API_KEY
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
-    # If the key is still not found here, the .env file is either missing or misnamed.
+    
     raise RuntimeError("GEMINI_API_KEY not found. Set it in system env or .env file.")
 
-# Initialize the Google Gen AI client
+
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-# FIX: Changed model to one supported by the general Gemini API client
+
 IMAGE_MODEL = "gemini-2.5-flash-image"
-IMAGE_ASPECT_RATIO = "1:1" # Corresponds to 1024x1024
+IMAGE_ASPECT_RATIO = "1:1" 
 
 INPUT_JSON = r"D:\Data\post content\current_week.json"  
 OUT_DIR = "generated_images"
@@ -88,7 +87,7 @@ def decode_and_save_image(resp_data, out_path):
     It returns a generate_content response with an Image Part.
     """
     if hasattr(resp_data, 'inline_data') and hasattr(resp_data.inline_data, 'data'):
-        # This structure is for the image part returned by the generate_content call
+        
         img_bytes = base64.b64decode(resp_data.inline_data.data)
         save_bytes_to_file(img_bytes, out_path)
         return out_path
@@ -123,7 +122,7 @@ def main():
 
         
         try:
-            # New API call using client.models.generate_content (with IMAGE modality)
+            
             resp = client.models.generate_content(
                 model=IMAGE_MODEL,
                 contents=[prompt],
@@ -135,8 +134,7 @@ def main():
 
         
         try:
-            # FIX: Extract the image data from the response.parts structure
-            # The first part should contain the image data.
+            
             resp_data = resp.parts[0]
         except Exception as e:
             print("Unexpected response structure or no image part found:", e)
@@ -149,7 +147,6 @@ def main():
             saved_path = decode_and_save_image(resp_data, out_path)
             print("Saved image to", saved_path)
             
-            # Optional: Open the image to verify it's a valid file
             img = Image.open(saved_path)
             
         except Exception as e:
