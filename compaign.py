@@ -46,19 +46,29 @@ def save_to_all_weeks(data):
 PROMPT = """
 I am part of a B2B SaaS company called CurlSek (https://curlsek.ai). We are an AI powered offensive security product company mainly targeting VAPT and continuous penetration testing. Create a weekly LinkedIn campaign based on a real cybersecurity news event from the last 2 weeks involving AI or a threat where AI fits naturally. Avoid generic topics.
 
-Provide 7 days of content:
-Day 1 short post
-Day 2 long post
-Day 3 carousel script
-Day 4 video script
-Day 5 analytic post
-Day 6 insight post
-Day 7 recap post
+All content must strictly follow LinkedIn content standards in tone, length, and readability.
 
-Each day's post must:
-Include a CTA to https://curlsek.ai
-Be unique
-Contain no emojis or special characters
+Provide 7 days of content:
+Day 1 short post (300–600 characters)
+Day 2 long post (900–1500 characters)
+Day 3 carousel script (each slide short, scannable, LinkedIn friendly)
+Day 4 video script (60–90 seconds spoken length)
+Day 5 analytic post (700–1200 characters)
+Day 6 insight post (600–1000 characters)
+Day 7 recap post (500–800 characters)
+
+CONTENT RULES:
+- Professional, human, and B2B focused
+- Clear paragraph spacing for readability
+- No emojis
+- No bullets
+- No special characters
+- No repeated ideas across days
+- Topic must remain the same across all 7 days
+
+Each day's post must include:
+A clear CTA to https://curlsek.ai
+Language suitable for LinkedIn decision makers and security professionals
 
 Output ONLY JSON:
 

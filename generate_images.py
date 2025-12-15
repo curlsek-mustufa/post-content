@@ -80,19 +80,22 @@ def save_bytes_to_file(b: bytes, path: str):
         f.write(b)
 
 
-def decode_and_save_image(resp_data, out_path):
-    """
-    Handles Google Gen AI (Gemini Image model) response.
-    The response structure is slightly different for the Gemini Image model.
-    It returns a generate_content response with an Image Part.
-    """
-    if hasattr(resp_data, 'inline_data') and hasattr(resp_data.inline_data, 'data'):
-        
-        img_bytes = base64.b64decode(resp_data.inline_data.data)
+def decode_and_save_image(resp_part, out_path):
+    # Gemini image parts come as inline_data with mime_type image/*
+    if (
+        hasattr(resp_part, "inline_data")
+        and hasattr(resp_part.inline_data, "mime_type")
+        and resp_part.inline_data.mime_type.startswith("image/")
+    ):
+        img_bytes = base64.b64decode(resp_part.inline_data.data)
         save_bytes_to_file(img_bytes, out_path)
         return out_path
 
-    raise RuntimeError("Unexpected image response format from Gemini Image API.")
+    # If Gemini returned text instead of image
+    raise RuntimeError(
+        f"Gemini did not return an image. Part type: {getattr(resp_part, 'mime_type', 'unknown')}"
+    )
+
 
 
 def main():
