@@ -4,9 +4,6 @@ import requests
 from openai import OpenAI
 from PIL import Image
 
-# =========================
-# CONFIG
-# =========================
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise RuntimeError("OPENAI_API_KEY not found")
@@ -21,16 +18,10 @@ LOGO_PATH = r"D:\Data\post content\curlsek_logo.jpeg"
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# =========================
-# LOAD CAMPAIGN
-# =========================
 def load_campaign(path):
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
         return json.load(f)
 
-# =========================
-# SAFE TOPIC NORMALIZATION (PERMANENT)
-# =========================
 SAFE_TOPIC_MAP = {
     "phishing": "digital communication security",
     "malware": "system integrity protection",
@@ -50,9 +41,6 @@ SAFE_TOPIC_MAP = {
 
 DEFAULT_CATEGORY = "modern cybersecurity infrastructure protection"
 
-# =========================
-# SAFE VISUAL ABSTRACTIONS
-# =========================
 SAFE_VISUAL_CONCEPTS = {
     "digital communication security":
         "abstract digital communication flows passing through an intelligent filtering layer",
@@ -94,9 +82,6 @@ SAFE_VISUAL_CONCEPTS = {
         "secured cloud-based systems operating across connected environments",
 }
 
-# =========================
-# MASTER IMAGE PROMPT (IMMUTABLE)
-# =========================
 MASTER_IMAGE_PROMPT = """
 Create a high-quality cybersecurity visual illustration.
 
@@ -146,9 +131,6 @@ Mood:
 - trustworthy
 """
 
-# =========================
-# BUILD SAFE PROMPT (AUTOMATIC)
-# =========================
 def build_prompt(topic: str):
     t = topic.lower()
     category = DEFAULT_CATEGORY
@@ -165,18 +147,13 @@ def build_prompt(topic: str):
 
     return MASTER_IMAGE_PROMPT.format(visual_concept=visual_concept)
 
-# =========================
-# SAVE IMAGE (DALL·E URL)
-# =========================
 def save_image(resp_data, out_path):
     r = requests.get(resp_data.url, timeout=30)
     r.raise_for_status()
     with open(out_path, "wb") as f:
         f.write(r.content)
 
-# =========================
-# LOGO: REMOVE WHITE BG, PRESERVE COLORS
-# =========================
+
 def load_logo_transparent(path, target_width):
     logo = Image.open(path).convert("RGBA")
     pixels = logo.getdata()
@@ -197,9 +174,7 @@ def load_logo_transparent(path, target_width):
     logo = logo.resize((target_width, int(logo.size[1] * scale)), Image.LANCZOS)
     return logo
 
-# =========================
-# ADD CURLSEK WATERMARK ONLY
-# =========================
+
 def add_watermark(image_path):
     base = Image.open(image_path).convert("RGBA")
     w, h = base.size
@@ -213,9 +188,7 @@ def add_watermark(image_path):
 
     base.convert("RGB").save(image_path, "PNG")
 
-# =========================
-# MAIN
-# =========================
+
 def main():
     campaign = load_campaign(INPUT_JSON)
     topic = campaign.get("topic", "Cybersecurity")

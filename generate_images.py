@@ -81,7 +81,7 @@ def save_bytes_to_file(b: bytes, path: str):
 
 
 def decode_and_save_image(resp_part, out_path):
-    # Gemini image parts come as inline_data with mime_type image/*
+    
     if (
         hasattr(resp_part, "inline_data")
         and hasattr(resp_part.inline_data, "mime_type")
@@ -91,7 +91,7 @@ def decode_and_save_image(resp_part, out_path):
         save_bytes_to_file(img_bytes, out_path)
         return out_path
 
-    # If Gemini returned text instead of image
+    
     raise RuntimeError(
         f"Gemini did not return an image. Part type: {getattr(resp_part, 'mime_type', 'unknown')}"
     )
